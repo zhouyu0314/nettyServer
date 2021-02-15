@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.mapper.UserMapper">
+
+    <select id="getUserById" resultType="com.zy.pojo.User">
+        select
+                REVISION as REVISION,
+                CREATED_BY as CREATEDBY,
+                CREATED_TIME as CREATEDTIME,
+                UPDATED_BY as UPDATEDBY,
+                UPDATED_TIME as UPDATEDTIME,
+                head_img as headImg,
+                id as id,
+                username as username,
+                password as password,
+                friendIds as friendIds
+        from user
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id != null">
+                and id=#{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getUserListByMap" resultType="com.zy.pojo.User" parameterType="java.util.Map">
+        select
+                REVISION as REVISION,
+                CREATED_BY as CREATEDBY,
+                CREATED_TIME as CREATEDTIME,
+                UPDATED_BY as UPDATEDBY,
+                UPDATED_TIME as UPDATEDTIME,
+                head_img as headImg,
+                id as id,
+                username as username,
+                password as password,
+                friendIds as friendIds
+        from user
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="REVISION != null and REVISION!=''">
+                    and REVISION=#{REVISION}
+                </if>
+                <if test="CREATEDBY != null and CREATEDBY!=''">
+                    and CREATED_BY=#{CREATEDBY}
+                </if>
+                <if test="CREATEDTIME != null and CREATEDTIME!=''">
+                    and CREATED_TIME=#{CREATEDTIME}
+                </if>
+                <if test="UPDATEDBY != null and UPDATEDBY!=''">
+                    and UPDATED_BY=#{UPDATEDBY}
+                </if>
+                <if test="UPDATEDTIME != null and UPDATEDTIME!=''">
+                    and UPDATED_TIME=#{UPDATEDTIME}
+                </if>
+                <if test="headImg != null and headImg!=''">
+                    and head_img=#{headImg}
+                </if>
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="username != null and username!=''">
+                    and username=#{username}
+                </if>
+                <if test="password != null and password!=''">
+                    and password=#{password}
+                </if>
+                <if test="friendIds != null and friendIds!=''">
+                    and friendIds=#{friendIds}
+                </if>
+        </trim>
+        <if test="beginPos != null and pageSize != null ">
+            limit #{beginPos},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getUserCountByMap" resultType="Integer"  parameterType="java.util.Map">
+        select count(*) from user
+        <trim prefix="where" prefixOverrides="and | or">
+                <if test="REVISION != null and REVISION!=''">
+                    and REVISION=#{REVISION}
+                </if>
+                <if test="CREATEDBY != null and CREATEDBY!=''">
+                    and CREATED_BY=#{CREATEDBY}
+                </if>
+                <if test="CREATEDTIME != null and CREATEDTIME!=''">
+                    and CREATED_TIME=#{CREATEDTIME}
+                </if>
+                <if test="UPDATEDBY != null and UPDATEDBY!=''">
+                    and UPDATED_BY=#{UPDATEDBY}
+                </if>
+                <if test="UPDATEDTIME != null and UPDATEDTIME!=''">
+                    and UPDATED_TIME=#{UPDATEDTIME}
+                </if>
+                <if test="headImg != null and headImg!=''">
+                    and head_img=#{headImg}
+                </if>
+                <if test="id != null and id!=''">
+                    and id=#{id}
+                </if>
+                <if test="username != null and username!=''">
+                    and username=#{username}
+                </if>
+                <if test="password != null and password!=''">
+                    and password=#{password}
+                </if>
+                <if test="friendIds != null and friendIds!=''">
+                    and friendIds=#{friendIds}
+                </if>
+        </trim>
+    </select>
+
+    <select id="getMyFriends" resultType="com.zy.pojo.User"  parameterType="java.util.List">
+        SELECT id,head_img as headImg,username FROM `user` where id in
+        <foreach collection="paramsList" index="index" item="id" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+    </select>
+
+    <insert id="insertUser" parameterType="com.zy.pojo.User">
+        insert into user(
+                         id
+                        REVISION,
+                        CREATED_BY,
+                        CREATED_TIME,
+                        UPDATED_BY,
+                        UPDATED_TIME,
+                        head_img,
+                        username,
+                        password,
+                        friendIds)
+        values(
+                     #{id},
+                     #{REVISION},
+                     #{CREATEDBY},
+                     #{CREATEDTIME},
+                     #{UPDATEDBY},
+                     #{UPDATEDTIME},
+                     #{headImg},
+                     #{username},
+                     #{password},
+                    #{friendIds})
+    </insert>
+
+    <update id="updateUser" parameterType="com.zy.pojo.User">
+        update user
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+                        <if test="REVISION != null and REVISION!=''">
+                            REVISION=#{REVISION},
+                        </if>
+                        <if test="CREATEDBY != null and CREATEDBY!=''">
+                            CREATED_BY=#{CREATEDBY},
+                        </if>
+                        <if test="CREATEDTIME != null">
+                            CREATED_TIME=#{CREATEDTIME},
+                        </if>
+                        <if test="UPDATEDBY != null and UPDATEDBY!=''">
+                            UPDATED_BY=#{UPDATEDBY},
+                        </if>
+                        <if test="UPDATEDTIME != null">
+                            UPDATED_TIME=#{UPDATEDTIME},
+                        </if>
+                        <if test="headImg != null and headImg!=''">
+                            head_img=#{headImg},
+                        </if>
+                        <if test="username != null and username!=''">
+                            username=#{username},
+                        </if>
+                        <if test="password != null and password!=''">
+                            password=#{password},
+                        </if>
+                        <if test="friendIds != null and friendIds!=''">
+                            friendIds=#{friendIds}
+                        </if>
+        </trim>
+    </update>
+</mapper>
